@@ -1,5 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>It is recommended to go to {{destination}}</h2>
+<h2>Today's weather conditions:</h2>
+{% for key, value in destination.items() %}
+<ul>
+    <li>
+        {{ key }}: {{ value }}
+    </li>
+</ul>
+{% endfor %}
 {% endblock %}
