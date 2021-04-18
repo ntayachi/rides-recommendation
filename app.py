@@ -18,14 +18,16 @@ def destination(date):
     return render_template('destination.html', destination=dest)
 
 def calculateDestination(sunday_date):
-    api_url = f'{config.API_BASE_URL}/current.json?key={config.API_KEY}&q=TUN'
-    weather = requests.get(api_url).content
-    weather_json = json.loads(weather)
+    api_url = f'{config.API_BASE_URL}/forecast.json?key={config.API_KEY}&q=TUN&days=3&hour=6'
+    api_response = requests.get(api_url).content
+    weather = json.loads(api_response)
+    days_forecast = weather['forecast']['forecastday']
+    target_day_weather = [day for day in days_forecast if day['date'] == sunday_date][0]
     result = {
-        'City': weather_json['location']['name'],
-        'Wind Direction': weather_json['current']['wind_dir'],
-        'Wind Speed': weather_json['current']['wind_kph'],
-        'Temperature': weather_json['current']['temp_c']
+        'City': weather['location']['name'],
+        'Wind Direction': target_day_weather['hour'][0]['wind_dir'],
+        'Wind Speed': target_day_weather['hour'][0]['wind_kph'],
+        'Temperature': target_day_weather['hour'][0]['temp_c']
     }
     return result
 
