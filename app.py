@@ -35,7 +35,7 @@ def calculateDestination(sunday_date):
     for dest in destinations:
         if dest['wind'] in target_day_weather['hour'][0]['wind_dir']:
             destination += (dest['city'])
-    result = {**weather_conditions, **{'Destinations Cities': destination}}
+    result = {**weather_conditions, **{'Destinations': destination}}
     return result
 
 if __name__ == '__main__':
