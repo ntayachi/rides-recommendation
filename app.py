@@ -23,12 +23,19 @@ def calculateDestination(sunday_date):
     weather = json.loads(api_response)
     days_forecast = weather['forecast']['forecastday']
     target_day_weather = [day for day in days_forecast if day['date'] == sunday_date][0]
-    result = {
+    weather_conditions = {
         'City': weather['location']['name'],
         'Wind Direction': target_day_weather['hour'][0]['wind_dir'],
         'Wind Speed': target_day_weather['hour'][0]['wind_kph'],
         'Temperature': target_day_weather['hour'][0]['temp_c']
     }
+    destination = []
+    with open('destinations.json', 'r') as inputFile:
+        destinations = json.load(inputFile)
+    for dest in destinations:
+        if dest['wind'] in target_day_weather['hour'][0]['wind_dir']:
+            destination += (dest['city'])
+    result = {**weather_conditions, **{'Destinations Cities': destination}}
     return result
 
 if __name__ == '__main__':

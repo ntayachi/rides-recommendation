@@ -1,0 +1,14 @@
+[
+    {
+        "wind": "N",
+        "city": ["Bizete", "Ghar El Melh", "El Alia", "Menzel Bourguiba"]
+    },
+    {
+        "wind": "S",
+        "city": ["Grombalia", "Hammamet"]
+    },
+    {
+        "wind": "E",
+        "city": ["Borj El Amri", "Mjez El Beb"]
+    }
+]
