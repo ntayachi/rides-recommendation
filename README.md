@@ -10,6 +10,12 @@ This project is to recommend Sunday ride destinations for cyclists based on the 
 python3 -m venv venv
 ```
 
+### Install dependencies
+
+```
+pip install -r requirements.txt
+```
+
 ### Create config.py file
 
 ```
