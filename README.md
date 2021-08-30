@@ -10,6 +10,12 @@ This project is to recommend Sunday ride destinations for cyclists based on the 
 python3 -m venv venv
 ```
 
+### Activate the virtual environment
+
+```
+source venv/bin/activate
+```
+
 ### Install dependencies
 
 ```
