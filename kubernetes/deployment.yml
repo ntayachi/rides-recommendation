@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rides-recomm-service
+  labels:
+    app: rides-recomm
+spec:
+  selector:
+    app: rides-recomm
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 5000
+  type: LoadBalancer
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rides-recomm-deployment
+  labels:
+    app: rides-recomm
+spec:
+  selector:
+    matchLabels:
+      app: rides-recomm
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: rides-recomm
+    spec:
+      containers:
+      - name: rides-recomm
+        image: rides-recomm:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 5000
