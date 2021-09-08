@@ -147,7 +147,7 @@ NAME                   TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)   
 rides-recomm-service   LoadBalancer   10.102.182.68   10.102.182.68   5000:31432/TCP   3d21h
 ```
 
-Go to http://${EXTERNAL-IP}:5000 to access the application.
+Go to `http://${EXTERNAL-IP}:5000` to access the application.
 
 #### Delete the deployment
 
