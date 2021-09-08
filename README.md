@@ -113,7 +113,7 @@ kubectl get pods
 
 ### Expose the LoadBalancer
 
-As of now, we created a service of type *LoadBalancer* which has no external IP assgined.
+As of now, we created a service of type **LoadBalancer** which has no external IP assgined.
 
 #### Display the Service
 
@@ -129,7 +129,7 @@ NAME                   TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)     
 rides-recomm-service   LoadBalancer   10.102.182.68   <pending>     5000:31432/TCP   3d21h
 ```
 
-Notice that the *EXTERNAL-IP* field is in *<pending>* state.
+Notice that the **EXTERNAL-IP** field is in **pending** state.
 
 #### Run tunnel in another terminal
 
