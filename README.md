@@ -93,6 +93,28 @@ minikube start
 eval $(minikube docker-env)
 ```
 
+#### Enable the Nginx ingress controller
+
+```
+minikube addons enable ingress
+```
+
+To verify that the Nginx ingress controller is running
+
+```
+kubectl get pods -n ingress-nginx
+```
+
+You should see something like this:
+
+```
+$ kubectl get pods -n ingress-nginx
+NAME                                        READY   STATUS      RESTARTS   AGE
+ingress-nginx-admission-create-qntq5        0/1     Completed   0          6d23h
+ingress-nginx-admission-patch-5q5r9         0/1     Completed   0          6d23h
+ingress-nginx-controller-59b45fb494-jxdv4   1/1     Running     2          6d23h
+```
+
 ### Build the Docker image
 
 ```
@@ -111,45 +133,36 @@ Make sure there are pods running the application.
 kubectl get pods
 ```
 
-### Expose the LoadBalancer
-
-As of now, we created a service of type **LoadBalancer** which has no external IP assgined.
-
-#### Display the Service
+Verify that the service was created and is available.
 
 ```
 kubectl get svc -l app=rides-recomm
 ```
 
-You should see something similar to this:
+### Get the URL of the service
 
 ```
-$ kubectl get svc -l app=rides-recomm
-NAME                   TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
-rides-recomm-service   LoadBalancer   10.102.182.68   <pending>     5000:31432/TCP   3d21h
+minikube service rides-recomm-service --url
 ```
 
-Notice that the **EXTERNAL-IP** field is in **pending** state.
-
-#### Run tunnel in another terminal
-
-To assign an IP to the service, execute the following command in a separate terminal.
+Example:
 
 ```
-minikube tunnel
+$ minikube service rides-recomm-service --url
+http://192.168.49.2:30971
 ```
 
-If you display the service again you will see that an IP was assigned to it.
+Go to `http://${IP}:${PORT}` to access the application.
+
+Where `${IP}` and `${PORT}` are respectively the IP and port from the previous command output.
+
+If you want to test the application using one command:
 
 ```
-$ kubectl get svc -l app=rides-recomm
-NAME                   TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)          AGE
-rides-recomm-service   LoadBalancer   10.102.182.68   10.102.182.68   5000:31432/TCP   3d21h
+curl $(minikube service rides-recomm-service --url)
 ```
 
-Go to `http://${EXTERNAL-IP}:5000` to access the application.
-
-#### Delete the deployment
+### Delete the deployment
 
 Once you are done with the application, you can delete the resources using the following command:
 
