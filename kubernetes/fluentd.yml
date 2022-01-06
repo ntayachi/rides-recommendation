@@ -66,17 +66,17 @@ spec:
         imagePullPolicy: Always
         env:
         - name: FLUENT_ELASTICSEARCH_HOST
-          value: "elasticsearch"
+          value: "es-cluster-0.elasticsearch-svc.default.svc.cluster.local"
         - name: FLUENT_ELASTICSEARCH_PORT
           value: "9200"
         - name: FLUENT_EALSTICSEARCH_SCHEME
-          value: "https"
+          value: "http"
         - name: FLUENT_UID
           value: "0"
-        - name: FLUENT_ELASTICSEARCH_USER
-          value: "elastic"
-        - name: FLUENT_ELASTICSEARCH_PASSWORD
-          value: ""
+        # - name: FLUENT_ELASTICSEARCH_USER
+        #   value: "elastic"
+        # - name: FLUENT_ELASTICSEARCH_PASSWORD
+        #   value: ""
         volumeMounts:
         - name: varlog
           mountPath: /var/log
