@@ -62,7 +62,7 @@ spec:
         effect: NoSchedule
       containers:
       - name: fluentd
-        image: fluent/fluentd-kubernetes-daemonset:elasticsearch
+        image: fluent/fluentd-kubernetes-daemonset:v1-debian-elasticsearch-amd64
         imagePullPolicy: Always
         env:
         - name: FLUENT_ELASTICSEARCH_HOST
