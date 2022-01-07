@@ -124,7 +124,7 @@ docker build -f docker/Dockerfile -t rides-recomm:latest .
 ### Create Kubernetes deployment
 
 ```
-kubectl apply -f kubernetes/deployment.yml
+kubectl apply -f kubernetes/app.yml
 ```
 
 Make sure there are pods running the application.
@@ -142,13 +142,13 @@ kubectl get svc -l app=rides-recomm
 ### Get the URL of the service
 
 ```
-minikube service rides-recomm-service --url
+minikube service rides-recomm-svc --url
 ```
 
 Example:
 
 ```
-$ minikube service rides-recomm-service --url
+$ minikube service rides-recomm-svc --url
 http://192.168.49.2:30971
 ```
 
@@ -159,7 +159,7 @@ Where `${IP}` and `${PORT}` are respectively the IP and port from the previous c
 If you want to test the application using one command:
 
 ```
-curl $(minikube service rides-recomm-service --url)
+curl $(minikube service rides-recomm-svc --url)
 ```
 
 ### Delete the deployment
@@ -167,5 +167,5 @@ curl $(minikube service rides-recomm-service --url)
 Once you are done with the application, you can delete the resources using the following command:
 
 ```
-kubectl delete -f kubernetes/deployment.yml
+kubectl delete -f kubernetes/app.yml
 ```

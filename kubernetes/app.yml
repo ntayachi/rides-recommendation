@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: rides-recomm-deployment
+  name: rides-recomm-dpl
   labels:
     app: rides-recomm
 spec:
@@ -25,7 +25,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: rides-recomm-service
+  name: rides-recomm-svc
   labels:
     app: rides-recomm
 spec:
@@ -41,7 +41,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: rides-recomm-ingress
+  name: rides-recomm-ing
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
 spec:
@@ -53,6 +53,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: rides-recomm-service
+                name: rides-recomm-svc
                 port:
                   number: 5000
