@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: rides-recomm-dpl
+  name: rides-rec-dpl
   labels:
-    app: rides-recomm
+    app: rides-rec
 spec:
   selector:
     matchLabels:
-      app: rides-recomm
+      app: rides-rec
   replicas: 3
   template:
     metadata:
       labels:
-        app: rides-recomm
+        app: rides-rec
     spec:
       containers:
-      - name: rides-recomm
-        image: rides-recomm:latest
+      - name: rides-rec
+        image: rides-rec:latest
         imagePullPolicy: Never
         ports:
         - containerPort: 5000
@@ -25,12 +25,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: rides-recomm-svc
+  name: rides-rec-svc
   labels:
-    app: rides-recomm
+    app: rides-rec
 spec:
   selector:
-    app: rides-recomm
+    app: rides-rec
   ports:
   - protocol: TCP
     port: 5000
@@ -41,18 +41,18 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: rides-recomm-ing
+  name: rides-rec-ing
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
 spec:
   rules:
-    - host: rides-recomm.tn
+    - host: rides-rec.tn
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: rides-recomm-svc
+                name: rides-rec-svc
                 port:
                   number: 5000

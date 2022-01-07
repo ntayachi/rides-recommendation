@@ -46,7 +46,7 @@ python app.py
 ### Build the Docker image
 
 ```
-docker build -f docker/Dockerfile -t rides-recomm:latest .
+docker build -f docker/Dockerfile -t rides-rec:latest .
 ```
 
 Make sure that the image was built
@@ -58,7 +58,7 @@ docker image ls
 ### Run the app in a Docker container
 
 ```
-docker run -d -p 5000:5000 --name rides-recomm-v1 rides-recomm:latest
+docker run -d -p 5000:5000 --name rides-rec-v1 rides-rec:latest
 ```
 
 Go to http://localhost:5000 to access the application.
@@ -66,9 +66,9 @@ Go to http://localhost:5000 to access the application.
 #### To stop and remove the container
 
 ```
-docker container stop rides-recomm-v1
+docker container stop rides-rec-v1
 
-docker container rm rides-recomm-v1
+docker container rm rides-rec-v1
 ```
 
 ## Steps to run in Kubernetes
@@ -118,7 +118,7 @@ ingress-nginx-controller-59b45fb494-jxdv4   1/1     Running     2          6d23h
 ### Build the Docker image
 
 ```
-docker build -f docker/Dockerfile -t rides-recomm:latest .
+docker build -f docker/Dockerfile -t rides-rec:latest .
 ```
 
 ### Create Kubernetes deployment
@@ -136,19 +136,19 @@ kubectl get pods
 Verify that the service was created and is available.
 
 ```
-kubectl get svc -l app=rides-recomm
+kubectl get svc -l app=rides-rec
 ```
 
 ### Get the URL of the service
 
 ```
-minikube service rides-recomm-svc --url
+minikube service rides-rec-svc --url
 ```
 
 Example:
 
 ```
-$ minikube service rides-recomm-svc --url
+$ minikube service rides-rec-svc --url
 http://192.168.49.2:30971
 ```
 
@@ -159,7 +159,7 @@ Where `${IP}` and `${PORT}` are respectively the IP and port from the previous c
 If you want to test the application using one command:
 
 ```
-curl $(minikube service rides-recomm-svc --url)
+curl $(minikube service rides-rec-svc --url)
 ```
 
 ### Delete the deployment
