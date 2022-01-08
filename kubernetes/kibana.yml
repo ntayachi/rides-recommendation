@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kibana-dpl
+  namespace: logging
   labels:
     app: kibana
 spec:
@@ -19,7 +20,7 @@ spec:
         image: docker.elastic.co/kibana/kibana:7.5.0
         env:
           - name: ELASTICSEARCH_HOSTS
-            value: "http://es-cluster-0.elasticsearch-svc.default.svc.cluster.local:9200"
+            value: "http://es-cluster-0.elasticsearch-svc.logging.svc.cluster.local:9200"
         ports:
         - containerPort: 5601
 
@@ -28,6 +29,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: kibana-svc
+  namespace: logging
 spec:
   selector:
     app: kibana
