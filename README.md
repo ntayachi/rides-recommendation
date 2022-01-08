@@ -46,7 +46,7 @@ python app.py
 ### Build the Docker image
 
 ```
-docker build -f docker/Dockerfile -t rides-recomm:latest .
+docker build -f docker/Dockerfile -t rides-rec:latest .
 ```
 
 Make sure that the image was built
@@ -58,7 +58,7 @@ docker image ls
 ### Run the app in a Docker container
 
 ```
-docker run -d -p 5000:5000 --name rides-recomm-v1 rides-recomm:latest
+docker run -d -p 5000:5000 --name rides-rec-v1 rides-rec:latest
 ```
 
 Go to http://localhost:5000 to access the application.
@@ -66,9 +66,9 @@ Go to http://localhost:5000 to access the application.
 #### To stop and remove the container
 
 ```
-docker container stop rides-recomm-v1
+docker container stop rides-rec-v1
 
-docker container rm rides-recomm-v1
+docker container rm rides-rec-v1
 ```
 
 ## Steps to run in Kubernetes
@@ -79,7 +79,7 @@ We will deploy the application in a local Kubernetes cluster using minikube.
 
 #### Install minikube
 
-Follow these steps to install minikube: [https://minikube.sigs.k8s.io/docs/start/]
+Follow these steps to install [minikube](https://minikube.sigs.k8s.io/docs/start/)
 
 #### Start minikube
 
@@ -118,37 +118,41 @@ ingress-nginx-controller-59b45fb494-jxdv4   1/1     Running     2          6d23h
 ### Build the Docker image
 
 ```
-docker build -f docker/Dockerfile -t rides-recomm:latest .
+docker build -f docker/Dockerfile -t rides-rec:latest .
 ```
 
-### Create Kubernetes deployment
+### Create Kubernetes resources
+
+The `kubernetes` folder contains YAML files to create deployment for the python application and other resources for the EFK logging stack (Elasticsearch, Fluentd and Kibana).
+
+The resources will be deployed in two different namespaces: `cycling` and `logging`. This is the command:
 
 ```
-kubectl apply -f kubernetes/deployment.yml
+kubectl apply -f kubernetes/
 ```
 
 Make sure there are pods running the application.
 
 ```
-kubectl get pods
+kubectl get pods -n cycling
 ```
 
 Verify that the service was created and is available.
 
 ```
-kubectl get svc -l app=rides-recomm
+kubectl get svc -n cycling -l app=rides-rec
 ```
 
 ### Get the URL of the service
 
 ```
-minikube service rides-recomm-service --url
+minikube service rides-rec-svc -n cycling --url
 ```
 
 Example:
 
 ```
-$ minikube service rides-recomm-service --url
+$ minikube service rides-rec-svc -n cycling --url
 http://192.168.49.2:30971
 ```
 
@@ -159,13 +163,59 @@ Where `${IP}` and `${PORT}` are respectively the IP and port from the previous c
 If you want to test the application using one command:
 
 ```
-curl $(minikube service rides-recomm-service --url)
+curl $(minikube service rides-rec-svc -n cycling --url)
 ```
 
-### Delete the deployment
+### Access the Kibana UI
+
+To access the Kibana UI you need first to forward its pod port number *5601* using this command:
+
+```
+kubectl port-forward ${KIBANA_POD_NAME} -n logging 5601:5601
+```
+
+Example:
+
+```
+$ kubectl port-forward -n logging kibana-dpl-5fd44bf458-w24fm 5601:5601
+Forwarding from 127.0.0.1:5601 -> 5601
+Forwarding from [::1]:5601 -> 5601
+```
+
+If you're lazy ( like me ), use this single command to fetch the *Kibana* pod name and forward the port at the same time:
+
+```
+kubectl port-forward $(kubectl get pods -n logging -l app=kibana -o json | jq -r '.items[].metadata.name') -n logging 5601:5601
+```
+
+The Kibana UI is now running on **http://localhost:5601**.
+
+### Create an Index Pattern
+
+1. Click Management from the left menu ( [link](http://localhost:5601/app/kibana#/management) )
+
+2. Click on **Index Patterns** under Kibana from the left menu
+
+3. Click on **Create index pattern**
+
+4. Enter `logstash-*` as the **Index pattern** and click on **Next step**
+
+5. Select `@timestamp` as the **Time Filter field name** and click on **Create index pattern**
+
+### View the kubernetes logs
+
+1. Go to the Discover menu from the left ( [link](http://localhost:5601/app/kibana#/discover) )
+
+2. On the **KQL** search bar, enter the following query to view the python application logs:
+
+```
+kubernetes.labels.app : "rides-rec"
+```
+
+### Delete the resources
 
 Once you are done with the application, you can delete the resources using the following command:
 
 ```
-kubectl delete -f kubernetes/deployment.yml
+kubectl delete -f kubernetes/
 ```
