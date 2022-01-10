@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.efk.es.statefulset.name }}
+  namespace: {{ .Values.efk.namespace }}
+spec:
+  serviceName: {{ .Values.efk.es.service.name }}
+  replicas: {{ .Values.efk.es.statefulset.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.efk.es.label }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.efk.es.label }}
+    spec:
+      containers:
+      - name: {{ .Values.efk.es.container.name }}
+        image: {{ .Values.efk.es.container.image }}
+        ports:
+        {{- range .Values.efk.es.container.ports }}
+        - containerPort: {{ .containerPort}}
+          name: {{ .name }}
+          protocol: {{ .protocol }}
+        {{- end }}
+        volumeMounts:
+        - name: {{ .Values.efk.es.container.volumeMounts.name }}
+          mountPath: {{ .Values.efk.es.container.volumeMounts.mountPath }}
+        env:
+          {{- range .Values.efk.es.container.env }}
+          {{- if eq .name "node.name" }}
+          - name: {{ .name }}
+            valueFrom:
+              fieldRef:
+                fieldPath: {{ .value }}
+          {{- else }}
+          - name: {{ .name }}
+            value: {{ .value }}
+          {{- end }}
+          {{- end }}
+      initContainers:
+      - name: fix-permissions
+        image: busybox
+        command: ["sh", "-c", "chown -R 1000:1000 /usr/share/elasticsearch/data"]
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: data
+          mountPath: /usr/share/elasticsearch/data
+      - name: increase-vm-max-map
+        image: busybox
+        command: ["sysctl", "-w", "vm.max_map_count=262144"]
+        securityContext:
+          privileged: true
+      - name: increase-fd-ulimit
+        image: busybox
+        command: ["sh", "-c", "ulimit -n 65536"]
+        securityContext:
+          privileged: true
+      # initContainers:
+      # {{- range .Values.efk.es.initContainers }}
+      # - name: {{ .name }}
+      #   image: busybox
+      #   command: {{ .command }}
+      #   securityContext:
+      #     privileged: true
+      # {{- if eq .name "fix-permissions" }}
+      #   volumeMounts:
+      #   - name: data
+      #     mountPath: /usr/share/elasticsearch/data
+      # {{- end}}
+      # {{- end }}
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ .Values.efk.es.volumeClaimTemplates.name }}
+      labels:
+        app: {{ .Values.efk.es.label }}
+    spec:
+      accessModes: {{ .Values.efk.es.volumeClaimTemplates.accessModes }}
+      resources:
+        requests:
+          storage: {{ .Values.efk.es.volumeClaimTemplates.storage }}

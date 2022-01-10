@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.efk.es.service.name }}
+  namespace: {{ .Values.efk.namespace }}
+  labels:
+    app: {{ .Values.efk.es.label }}
+spec:
+  selector:
+    app: {{ .Values.efk.es.label }}
+  clusterIP: {{ .Values.efk.es.service.clusterIP }}
+  ports:
+  {{- range .Values.efk.es.service.ports }}
+    - port: {{ .port }}
+      name: {{ .name }}
+  {{- end}}
