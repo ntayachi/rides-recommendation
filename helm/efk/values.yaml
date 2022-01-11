@@ -51,4 +51,49 @@ efk:
       name: data
       accessModes: [ "ReadWriteOnce" ]
       storage: 1Gi
+  fluentd:
+    label: fluentd
+    serviceaccount:
+      name: fluentd-sa
+    clusterrole:
+      name: fluentd-cr
+      resources:
+      - pods
+      - namespaces
+      verbs:
+      - get
+      - list
+      - watch
+    daemonset:
+      name: fluentd-ds
+      tolerations:
+        key: node-role.kubernetes.io/master
+        effect: NoSchedule
+      container:
+        name: fluentd
+        image: fluent/fluentd-kubernetes-daemonset:v1-debian-elasticsearch-amd64
+        env:
+        - name: FLUENT_ELASTICSEARCH_HOST
+          value: "es-cluster-0.elasticsearch-svc.logging.svc.cluster.local"
+        - name: FLUENT_ELASTICSEARCH_PORT
+          value: "9200"
+        - name: FLUENT_EALSTICSEARCH_SCHEME
+          value: "http"
+        - name: FLUENT_UID
+          value: "0"
+        - name: FLUENTD_SYSTEMD_CONF
+          value: "disable"
+        volumeMounts:
+        - name: varlog
+          mountPath: /var/log
+        - name: dockercontainers
+          mountPath: /var/lib/docker/containers
+          readOnly: true
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: varlog
+        path: /var/log
+      - name: dockercontainers
+        path: /var/lib/docker/containers
+
 

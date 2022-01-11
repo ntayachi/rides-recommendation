@@ -19,7 +19,7 @@ spec:
         image: {{ .Values.efk.es.container.image }}
         ports:
         {{- range .Values.efk.es.container.ports }}
-        - containerPort: {{ .containerPort}}
+        - containerPort: {{ .containerPort }}
           name: {{ .name }}
           protocol: {{ .protocol }}
         {{- end }}
@@ -68,7 +68,7 @@ spec:
       #   volumeMounts:
       #   - name: data
       #     mountPath: /usr/share/elasticsearch/data
-      # {{- end}}
+      # {{- end }}
       # {{- end }}
   volumeClaimTemplates:
   - metadata:

@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ .Values.efk.fluentd.daemonset.name }}
+  namespace: {{ .Values.efk.namespace }}
+  labels:
+    app: {{ .Values.efk.fluentd.label }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.efk.fluentd.label }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.efk.fluentd.label }}
+    spec:
+      serviceAccount: {{ .Values.efk.fluentd.serviceaccount.name }}
+      serviceAccountName: {{ .Values.efk.fluentd.serviceaccount.name }}
+      tolerations:
+      - key: {{ .Values.efk.fluentd.daemonset.tolerations.key }}
+        effect: {{ .Values.efk.fluentd.daemonset.tolerations.effect }}
+      containers:
+      - name: {{ .Values.efk.fluentd.daemonset.container.name }}
+        image: {{ .Values.efk.fluentd.daemonset.container.image }}
+        env:
+        {{- range .Values.efk.fluentd.daemonset.container.env }}
+        - name: {{ .name }}
+          value: {{ .value }}
+        {{- end }}
+        volumeMounts:
+        {{- range .Values.efk.fluentd.daemonset.container.volumeMounts }}
+        - name: {{ .name }}
+          mountPath: {{ .mountPath }}
+          {{- if hasKey $.Values.efk.fluentd.daemonset.container.volumeMounts "readOnly" }}
+          readOnly: {{ .readOnly }}
+          {{- end }}
+        {{- end }}
+      terminationGracePeriodSeconds: {{ .Values.efk.fluentd.daemonset.terminationGracePeriodSeconds }}
+      volumes:
+      {{- range .Values.efk.fluentd.daemonset.volumes }}
+      - name: {{ .name }}
+        hostPath:
+          path: {{ .path }}
+      {{- end }}

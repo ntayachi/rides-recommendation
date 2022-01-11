@@ -1,0 +1,10 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ .Values.efk.fluentd.clusterrole.name }}
+  namespace: {{ .Values.efk.namespace }}
+rules:
+- apiGroups:
+  - ""
+  resources: {{ .Values.efk.fluentd.clusterrole.resources }}
+  verbs: {{ .Values.efk.fluentd.clusterrole.verbs }}
