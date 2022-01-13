@@ -1,33 +1,33 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ .Values.efk.es.statefulset.name }}
+  name: {{ .Values.elasticsearch.statefulset.name }}
   namespace: {{ .Values.efk.namespace }}
 spec:
-  serviceName: {{ .Values.efk.es.service.name }}
-  replicas: {{ .Values.efk.es.statefulset.replicas }}
+  serviceName: {{ .Values.elasticsearch.service.name }}
+  replicas: {{ .Values.elasticsearch.statefulset.replicas }}
   selector:
     matchLabels:
-      app: {{ .Values.efk.es.label }}
+      app: {{ .Values.elasticsearch.label }}
   template:
     metadata:
       labels:
-        app: {{ .Values.efk.es.label }}
+        app: {{ .Values.elasticsearch.label }}
     spec:
       containers:
-      - name: {{ .Values.efk.es.container.name }}
-        image: {{ .Values.efk.es.container.image }}
+      - name: {{ .Values.elasticsearch.container.name }}
+        image: {{ .Values.elasticsearch.container.image }}
         ports:
-        {{- range .Values.efk.es.container.ports }}
+        {{- range .Values.elasticsearch.container.ports }}
         - containerPort: {{ .containerPort }}
           name: {{ .name }}
           protocol: {{ .protocol }}
         {{- end }}
         volumeMounts:
-        - name: {{ .Values.efk.es.container.volumeMounts.name }}
-          mountPath: {{ .Values.efk.es.container.volumeMounts.mountPath }}
+        - name: {{ .Values.elasticsearch.container.volumeMounts.name }}
+          mountPath: {{ .Values.elasticsearch.container.volumeMounts.mountPath }}
         env:
-          {{- range .Values.efk.es.container.env }}
+          {{- range .Values.elasticsearch.container.env }}
           {{- if eq .name "node.name" }}
           - name: {{ .name }}
             valueFrom:
@@ -58,7 +58,7 @@ spec:
         securityContext:
           privileged: true
       # initContainers:
-      # {{- range .Values.efk.es.initContainers }}
+      # {{- range .Values.elasticsearch.initContainers }}
       # - name: {{ .name }}
       #   image: busybox
       #   command: {{ .command }}
@@ -72,11 +72,11 @@ spec:
       # {{- end }}
   volumeClaimTemplates:
   - metadata:
-      name: {{ .Values.efk.es.volumeClaimTemplates.name }}
+      name: {{ .Values.elasticsearch.volumeClaimTemplates.name }}
       labels:
-        app: {{ .Values.efk.es.label }}
+        app: {{ .Values.elasticsearch.label }}
     spec:
-      accessModes: {{ .Values.efk.es.volumeClaimTemplates.accessModes }}
+      accessModes: {{ .Values.elasticsearch.volumeClaimTemplates.accessModes }}
       resources:
         requests:
-          storage: {{ .Values.efk.es.volumeClaimTemplates.storage }}
+          storage: {{ .Values.elasticsearch.volumeClaimTemplates.storage }}

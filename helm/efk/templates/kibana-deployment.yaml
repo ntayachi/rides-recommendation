@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Values.kibana.deployment.name }}
-  namespace: logging
+  namespace: {{ .Values.efk.namespace }}
   labels:
     app: {{ .Values.kibana.label }}
 spec:

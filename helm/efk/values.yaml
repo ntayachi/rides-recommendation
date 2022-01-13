@@ -1,86 +1,88 @@
 efk:
   namespace: logging
-  es:
-    label: elasticsearch
-    service:
-      name: elasticsearch-svc
-      type: ClusterIP
-      clusterIP: None
-      ports:
-        - port: 9200
-          name: rest
-        - port: 9300
-          name: inter-node
-    statefulset:
-      name: es-cluster
-      replicas: 1
-    container:
-      name: elasticsearch
-      image: docker.elastic.co/elasticsearch/elasticsearch:7.5.0
-      ports:
-        - containerPort: 9200
-          name: rest
-          protocol: TCP
-        - containerPort: 9300
-          name: inter-node
-          protocol: TCP
-      volumeMounts:
-        name: data
-        mountPath: /usr/share/elasticsearch/data
-      env:
-        - name: cluster.name
-          value: k8s-logs
-        - name: node.name
-          value: metadata.name
-        - name: discovery.seed_hosts
-          value: "es-cluster-0.elasticsearch"
-        - name: cluster.initial_master_nodes
-          value: "es-cluster-0"
-        - name: ES_JAVA_OPTS
-          value: "-Xms512m -Xmx512m"
-    initContainers:
-      - name: fix-permissions
-        command: ["sh", "-c", "chown -R 1000:1000 /usr/share/elasticsearch/data"]
-        volumeMounts:
-        - name: data
-          mountPath: /usr/share/elasticsearch/data
-      - name: increase-vm-max-map
-        command: ["sysctl", "-w", "vm.max_map_count=262144"]
-      - name: increase-fd-ulimit
-        command: ["sh", "-c", "ulimit -n 65536"]
-    volumeClaimTemplates:
+# --------- Elasticsearch values ---------
+elasticsearch:
+  label: elasticsearch
+  service:
+    name: elasticsearch-svc
+    type: ClusterIP
+    clusterIP: None
+    ports:
+      - port: 9200
+        name: rest
+      - port: 9300
+        name: inter-node
+  statefulset:
+    name: es-cluster
+    replicas: 1
+  container:
+    name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.5.0
+    ports:
+      - containerPort: 9200
+        name: rest
+        protocol: TCP
+      - containerPort: 9300
+        name: inter-node
+        protocol: TCP
+    volumeMounts:
       name: data
-      accessModes: [ "ReadWriteOnce" ]
-      storage: 1Gi
-  fluentd:
-    label: fluentd
-    serviceaccount:
-      name: fluentd-sa
-    clusterrole:
-      name: fluentd-cr
-    clusterrolebinding:
-      name: fluentd-crb
-    daemonset:
-      name: fluentd-ds
-      tolerations:
-        key: node-role.kubernetes.io/master
-        effect: NoSchedule
-      container:
-        name: fluentd
-        image: fluent/fluentd-kubernetes-daemonset:v1-debian-elasticsearch-amd64
-        volumeMounts:
-        - name: varlog
-          mountPath: /var/log
-        - name: dockercontainers
-          mountPath: /var/lib/docker/containers
-          readOnly: true
-      terminationGracePeriodSeconds: 30
-      volumes:
+      mountPath: /usr/share/elasticsearch/data
+    env:
+      - name: cluster.name
+        value: k8s-logs
+      - name: node.name
+        value: metadata.name
+      - name: discovery.seed_hosts
+        value: "es-cluster-0.elasticsearch"
+      - name: cluster.initial_master_nodes
+        value: "es-cluster-0"
+      - name: ES_JAVA_OPTS
+        value: "-Xms512m -Xmx512m"
+  initContainers:
+    - name: fix-permissions
+      command: ["sh", "-c", "chown -R 1000:1000 /usr/share/elasticsearch/data"]
+      volumeMounts:
+      - name: data
+        mountPath: /usr/share/elasticsearch/data
+    - name: increase-vm-max-map
+      command: ["sysctl", "-w", "vm.max_map_count=262144"]
+    - name: increase-fd-ulimit
+      command: ["sh", "-c", "ulimit -n 65536"]
+  volumeClaimTemplates:
+    name: data
+    accessModes: [ "ReadWriteOnce" ]
+    storage: 1Gi
+# --------- Fluentd values ---------
+fluentd:
+  label: fluentd
+  serviceaccount:
+    name: fluentd-sa
+  clusterrole:
+    name: fluentd-cr
+  clusterrolebinding:
+    name: fluentd-crb
+  daemonset:
+    name: fluentd-ds
+    tolerations:
+      key: node-role.kubernetes.io/master
+      effect: NoSchedule
+    container:
+      name: fluentd
+      image: fluent/fluentd-kubernetes-daemonset:v1-debian-elasticsearch-amd64
+      volumeMounts:
       - name: varlog
-        path: /var/log
+        mountPath: /var/log
       - name: dockercontainers
-        path: /var/lib/docker/containers
-# --- Kibana values ---
+        mountPath: /var/lib/docker/containers
+        readOnly: true
+    terminationGracePeriodSeconds: 30
+    volumes:
+    - name: varlog
+      path: /var/log
+    - name: dockercontainers
+      path: /var/lib/docker/containers
+# --------- Kibana values ---------
 kibana:
   label: kibana
   service:
