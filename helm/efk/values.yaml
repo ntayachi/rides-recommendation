@@ -4,6 +4,7 @@ efk:
     label: elasticsearch
     service:
       name: elasticsearch-svc
+      type: ClusterIP
       clusterIP: None
       ports:
         - port: 9200
@@ -79,5 +80,22 @@ efk:
         path: /var/log
       - name: dockercontainers
         path: /var/lib/docker/containers
-
-
+# --- Kibana values ---
+kibana:
+  label: kibana
+  service:
+    name: kibana-svc
+    type: NodePort
+    port: 8080
+    targetPort: 5601
+    nodePort: 30000
+  deployment:
+    name: kibana-dpl
+    replicas: 1
+    container:
+      name: kibana
+      image: docker.elastic.co/kibana/kibana:7.5.0
+      env:
+        - name: ELASTICSEARCH_HOSTS
+          value: "http://es-cluster-0.elasticsearch-svc.logging.svc.cluster.local:9200"
+      port: 5601

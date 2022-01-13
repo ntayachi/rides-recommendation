@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.kibana.deployment.name }}
+  namespace: logging
+  labels:
+    app: {{ .Values.kibana.label }}
+spec:
+  replicas: {{ .Values.kibana.deployment.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.kibana.label }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.kibana.label }}
+    spec:
+      containers:
+      - name: {{ .Values.kibana.deployment.container.name }}
+        image: {{ .Values.kibana.deployment.container.image }}
+        env:
+        {{- range .Values.kibana.deployment.container.env }}
+          - name: {{ .name }}
+            value: {{ .value }}
+        {{- end }}
+        ports:
+        - containerPort: {{ .Values.kibana.deployment.container.port }}
