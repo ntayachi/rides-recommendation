@@ -8,6 +8,12 @@ You should enter the following date format in the 'Sunday date' input field: YYY
 
 ## Steps to run locally
 
+### Prerequisites
+
+- Install [python3](https://www.python.org/downloads/)
+- Install [pip](https://pip.pypa.io/en/stable/installation/)
+- Sign up [Weather API](https://www.weatherapi.com/) account ( it's free! )
+
 ### Create virtual environment
 
 ```
@@ -41,7 +47,11 @@ API_KEY = '********************'
 python app.py
 ```
 
-## Steps to run in Docker
+## Steps to deploy in Docker
+
+### Prerequisites
+
+- Install [docker](https://docs.docker.com/get-docker/)
 
 ### Build the Docker image
 
@@ -71,15 +81,17 @@ docker container stop rides-rec-v1
 docker container rm rides-rec-v1
 ```
 
-## Steps to run in Kubernetes
+## Steps to deploy in Kubernetes
 
 We will deploy the application in a local Kubernetes cluster using minikube.
 
+### Prerequisites
+
+- Install [docker](https://docs.docker.com/get-docker/)
+- Install [kubectl](https://kubernetes.io/docs/tasks/tools/)
+- Install [minikube](https://minikube.sigs.k8s.io/docs/start/)
+
 ### minikube steps
-
-#### Install minikube
-
-Follow these steps to install [minikube](https://minikube.sigs.k8s.io/docs/start/)
 
 #### Start minikube
 
@@ -190,6 +202,8 @@ kubectl port-forward $(kubectl get pods -n logging -l app=kibana -o json | jq -r
 
 The Kibana UI is now running on **http://localhost:5601**.
 
+Note that you might need to wait a few minutes for the Kibana UI to be available until the Elasticsearch StatefulSet is up and running.
+
 ### Create an Index Pattern
 
 1. Click Management from the left menu ( [link](http://localhost:5601/app/kibana#/management) )
@@ -218,4 +232,152 @@ Once you are done with the application, you can delete the resources using the f
 
 ```
 kubectl delete -f kubernetes/
+```
+
+## Steps to deploy using Helm
+
+In this section we will use Helm as package manager to deploy all the kubernetes YAML files created previously.
+
+### Prerequisites
+
+- Install [docker](https://docs.docker.com/get-docker/)
+- Install [kubectl](https://kubernetes.io/docs/tasks/tools/)
+- Install [minikube](https://minikube.sigs.k8s.io/docs/start/)
+- Install [Helm (v3)](https://helm.sh/docs/intro/install/)
+
+### Install the app release
+
+```
+helm install app helm/charts/app/
+```
+
+### Install the EFK stack release
+
+```
+helm install efk helm/charts/efk/
+```
+
+### List the releases
+
+```
+helm ls
+```
+
+Example:
+
+```
+$ helm ls
+NAME	NAMESPACE	REVISION	UPDATED                                	STATUS  	CHART    	APP VERSION
+app 	default  	1       	2022-01-14 09:43:32.838064809 +0100 CET	deployed	app-0.1.0	1.16.0
+efk 	default  	1       	2022-01-14 09:44:43.396280181 +0100 CET	deployed	efk-0.1.0	1.16.0
+```
+
+### Test the Kibana UI
+
+Follow the same steps from the previous section to [access the Kibana UI](#access-the-kibana-ui), [create an Index Pattern](#create-an-index-pattern) and [view the logs](#view-the-kubernetes-logs).
+
+### To uninstall the releases
+
+```
+helm uninstall app efk
+```
+
+Example:
+
+```
+$ helm uninstall app efk
+release "app" uninstalled
+release "efk" uninstalled
+```
+
+## Steps to deploy using helmfile
+
+After using Helm in the previous section to deploy the Kubernetes Helm Charts, in this section we will use the declarative approach using helmfile.
+
+### Prerequisites
+
+- Install [docker](https://docs.docker.com/get-docker/)
+- Install [kubectl](https://kubernetes.io/docs/tasks/tools/)
+- Install [minikube](https://minikube.sigs.k8s.io/docs/start/)
+- Install [Helm (v3)](https://helm.sh/docs/intro/install/)
+- Install [helmfile](https://github.com/roboll/helmfile#installation)
+
+Note that after downloading helmfile you need to execute these commands:
+
+```
+chmod +x helmfile_linux_amd64
+
+sudo mv helmfile_linux_amd64 /usr/local/bin/
+```
+
+### Sync the resources from state file
+
+This command will create all the resources in the Kubernetes cluster:
+
+```
+cd helm/
+
+helmfile sync
+```
+
+Example:
+
+```
+$ helmfile sync
+Building dependency release=efk, chart=charts/efk
+Building dependency release=app, chart=charts/app
+Affected releases are:
+  app (charts/app) UPDATED
+  efk (charts/efk) UPDATED
+
+Upgrading release=app, chart=charts/app
+Upgrading release=efk, chart=charts/efk
+Release "app" does not exist. Installing it now.
+NAME: app
+LAST DEPLOYED: Fri Jan 14 10:02:44 2022
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+...
+...
+UPDATED RELEASES:
+NAME   CHART        VERSION
+app    charts/app     0.1.0
+efk    charts/efk     0.1.0
+```
+
+### Test the Kibana UI after deploying using helmfile
+
+Follow the same steps from the previous section to [access the Kibana UI](#access-the-kibana-ui), [create an Index Pattern](#create-an-index-pattern) and [view the logs](#view-the-kubernetes-logs).
+
+### To destroy the resources
+
+```
+helmfile destroy
+```
+
+Example:
+
+```
+$ helmfile destroy
+Building dependency release=app, chart=charts/app
+Building dependency release=efk, chart=charts/efk
+Listing releases matching ^efk$
+efk 	default  	1       	2022-01-14 10:02:44.257445778 +0100 CET	deployed	efk-0.1.0	1.16.0
+
+Listing releases matching ^app$
+app 	default  	1       	2022-01-14 10:02:44.209445106 +0100 CET	deployed	app-0.1.0	1.16.0
+
+Deleting efk
+Deleting app
+release "app" uninstalled
+
+release "efk" uninstalled
+
+
+DELETED RELEASES:
+NAME
+app
+efk
 ```

@@ -1,0 +1,13 @@
+apiVersion: v2
+name: efk
+description: A Helm chart for Kubernetes
+type: application
+version: 0.1.0
+appVersion: "1.16.0"
+keywords:
+  - efk
+  - logging
+home: https://github.com/ntayachi/rides-recommendation
+maintainers:
+  - name: Nafaa Tayachi
+    url: https://github.com/ntayachi
