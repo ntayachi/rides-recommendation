@@ -312,6 +312,8 @@ sudo mv helmfile_linux_amd64 /usr/local/bin/
 
 ### Sync the resources from state file
 
+This command will create all the resources in the Kubernetes cluster:
+
 ```
 cd helm/
 
