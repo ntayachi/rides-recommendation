@@ -1,0 +1,7 @@
+__pycache__
+*.pyc
+venv
+config.py.template
+docker
+helm
+kubernetes
