@@ -1,8 +1,7 @@
-FROM python:3.8
+FROM python:3.8-alpine
 
-RUN mkdir /app
 WORKDIR /app
-ADD . /app
+ADD src /app
 RUN pip install -r requirements.txt
 
 EXPOSE 5000
