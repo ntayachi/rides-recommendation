@@ -22,11 +22,11 @@ spec:
         app: rides-rec
     spec:
       containers:
-      - name: rides-rec
-        image: rides-rec:latest
-        imagePullPolicy: Never
-        ports:
-        - containerPort: 5000
+        - name: rides-rec
+          image: rides-rec:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5000
 
 ---
 apiVersion: v1
@@ -40,9 +40,9 @@ spec:
   selector:
     app: rides-rec
   ports:
-  - protocol: TCP
-    port: 5000
-    targetPort: 5000
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
   type: LoadBalancer
 
 ---

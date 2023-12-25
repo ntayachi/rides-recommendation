@@ -1,12 +1,7 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <h2>Weather conditions for the selected day:</h2>
 {% for key, value in destination.items() %}
 <ul>
-    <li>
-        {{ key }}: {{ value }}
-    </li>
+  <li>{{ key }}: {{ value }}</li>
 </ul>
-{% endfor %}
-{% endblock %}
+{% endfor %} {% endblock %}

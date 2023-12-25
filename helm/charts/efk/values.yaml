@@ -43,15 +43,15 @@ elasticsearch:
     - name: fix-permissions
       command: ["sh", "-c", "chown -R 1000:1000 /usr/share/elasticsearch/data"]
       volumeMounts:
-      - name: data
-        mountPath: /usr/share/elasticsearch/data
+        - name: data
+          mountPath: /usr/share/elasticsearch/data
     - name: increase-vm-max-map
       command: ["sysctl", "-w", "vm.max_map_count=262144"]
     - name: increase-fd-ulimit
       command: ["sh", "-c", "ulimit -n 65536"]
   volumeClaimTemplates:
     name: data
-    accessModes: [ "ReadWriteOnce" ]
+    accessModes: ["ReadWriteOnce"]
     storage: 1Gi
 # --------- Fluentd values ---------
 fluentd:
@@ -71,17 +71,17 @@ fluentd:
       name: fluentd
       image: fluent/fluentd-kubernetes-daemonset:v1-debian-elasticsearch-amd64
       volumeMounts:
-      - name: varlog
-        mountPath: /var/log
-      - name: dockercontainers
-        mountPath: /var/lib/docker/containers
-        readOnly: true
+        - name: varlog
+          mountPath: /var/log
+        - name: dockercontainers
+          mountPath: /var/lib/docker/containers
+          readOnly: true
     terminationGracePeriodSeconds: 30
     volumes:
-    - name: varlog
-      path: /var/log
-    - name: dockercontainers
-      path: /var/lib/docker/containers
+      - name: varlog
+        path: /var/log
+      - name: dockercontainers
+        path: /var/lib/docker/containers
 # --------- Kibana values ---------
 kibana:
   label: kibana
