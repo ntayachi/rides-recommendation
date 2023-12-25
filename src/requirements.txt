@@ -1,7 +1,6 @@
 certifi
 charset-normalizer
 click
-config.post0
 Flask
 idna
 Jinja2

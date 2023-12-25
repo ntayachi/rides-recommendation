@@ -180,7 +180,7 @@ curl $(minikube service rides-rec-svc -n cycling --url)
 
 ### Access the Kibana UI
 
-To access the Kibana UI you need first to forward its pod port number *5601* using this command:
+To access the Kibana UI you need first to forward its pod port number _5601_ using this command:
 
 ```
 kubectl port-forward ${KIBANA_POD_NAME} -n logging 5601:5601
@@ -194,7 +194,7 @@ Forwarding from 127.0.0.1:5601 -> 5601
 Forwarding from [::1]:5601 -> 5601
 ```
 
-If you're lazy ( like me ), use this single command to fetch the *Kibana* pod name and forward the port at the same time:
+If you're lazy ( like me ), use this single command to fetch the _Kibana_ pod name and forward the port at the same time:
 
 ```
 kubectl port-forward $(kubectl get pods -n logging -l app=kibana -o json | jq -r '.items[].metadata.name') -n logging 5601:5601

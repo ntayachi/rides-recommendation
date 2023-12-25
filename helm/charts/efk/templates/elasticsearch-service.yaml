@@ -13,4 +13,4 @@ spec:
   {{- range .Values.elasticsearch.service.ports }}
     - port: {{ .port }}
       name: {{ .name }}
-  {{- end}}
+  {{- end }}

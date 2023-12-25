@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.app.deployment.name }}
-  namespace: {{ .Values.app.namespace }}
+  name: { { .Values.app.deployment.name } }
+  namespace: { { .Values.app.namespace } }
   labels:
-    app: {{ .Values.app.label }}
+    app: { { .Values.app.label } }
 spec:
   selector:
     matchLabels:
-      app: {{ .Values.app.label }}
-  replicas: {{ .Values.app.deployment.replicas }}
+      app: { { .Values.app.label } }
+  replicas: { { .Values.app.deployment.replicas } }
   template:
     metadata:
       labels:
-        app: {{ .Values.app.label }}
+        app: { { .Values.app.label } }
     spec:
       containers:
-        - name: {{ .Values.app.container.name }}
-          image: {{ .Values.app.container.image }}
-          imagePullPolicy: {{ .Values.app.container.imagePullPolicy }}
+        - name: { { .Values.app.container.name } }
+          image: { { .Values.app.container.image } }
+          imagePullPolicy: { { .Values.app.container.imagePullPolicy } }
           ports:
-            - containerPort: {{ .Values.app.container.port }}
+            - containerPort: { { .Values.app.container.port } }
