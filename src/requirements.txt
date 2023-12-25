@@ -8,3 +8,4 @@ MarkupSafe
 requests
 urllib3
 Werkzeug
+pre-commit
