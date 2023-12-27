@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -20,7 +21,8 @@ spec:
           image: docker.elastic.co/kibana/kibana:7.5.0
           env:
             - name: ELASTICSEARCH_HOSTS
-              value: "http://es-cluster-0.elasticsearch-svc.logging.svc.cluster.local:9200"
+              value: >
+                http://es-cluster-0.elasticsearch-svc.logging.svc.cluster.local:9200
           ports:
             - containerPort: 5601
 
@@ -38,4 +40,3 @@ spec:
     - port: 8080
       targetPort: 5601
       nodePort: 30000
-

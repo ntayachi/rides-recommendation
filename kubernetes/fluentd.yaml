@@ -57,10 +57,12 @@ spec:
                   effect: NoSchedule
             containers:
                 - name: fluentd
-                  image: fluent/fluentd-kubernetes-daemonset:v1-debian-elasticsearch-amd64
+                  image: >
+                    fluent/fluentd-kubernetes-daemonset:v1-debian-elasticsearch-amd64
                   env:
                       - name: FLUENT_ELASTICSEARCH_HOST
-                        value: es-cluster-0.elasticsearch-svc.logging.svc.cluster.local
+                        value: >
+                          es-cluster-0.elasticsearch-svc.logging.svc.cluster.local
                       - name: FLUENT_ELASTICSEARCH_PORT
                         value: '9200'
                       - name: FLUENT_EALSTICSEARCH_SCHEME
@@ -83,4 +85,3 @@ spec:
                 - name: dockercontainers
                   hostPath:
                       path: /var/lib/docker/containers
-

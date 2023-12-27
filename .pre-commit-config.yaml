@@ -15,4 +15,3 @@ repos:
       rev: 0.2.3
       hooks:
           - id: yamlfmt
-

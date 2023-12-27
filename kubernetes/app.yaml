@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -65,4 +66,3 @@ spec:
                 name: rides-rec-svc
                 port:
                   number: 5000
-

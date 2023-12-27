@@ -70,7 +70,8 @@ fluentd:
             effect: NoSchedule
         container:
             name: fluentd
-            image: fluent/fluentd-kubernetes-daemonset:v1-debian-elasticsearch-amd64
+            image: >
+              fluent/fluentd-kubernetes-daemonset:v1-debian-elasticsearch-amd64
             volumeMounts:
                 - name: varlog
                   mountPath: /var/log
@@ -100,6 +101,6 @@ kibana:
             image: docker.elastic.co/kibana/kibana:7.5.0
             env:
                 - name: ELASTICSEARCH_HOSTS
-                  value: http://es-cluster-0.elasticsearch-svc.logging.svc.cluster.local:9200
+                  value: >
+                    http://es-cluster-0.elasticsearch-svc.logging.svc.cluster.local:9200
             port: 5601
-

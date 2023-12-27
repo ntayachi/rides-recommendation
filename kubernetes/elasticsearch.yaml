@@ -66,7 +66,8 @@ spec:
             initContainers:
                 - name: fix-permissions
                   image: busybox
-                  command: [sh, -c, chown -R 1000:1000 /usr/share/elasticsearch/data]
+                  command: >
+                    [sh, -c, chown -R 1000:1000 /usr/share/elasticsearch/data]
                   securityContext:
                       privileged: true
                   volumeMounts:
@@ -92,4 +93,3 @@ spec:
               resources:
                   requests:
                       storage: 1Gi
-
