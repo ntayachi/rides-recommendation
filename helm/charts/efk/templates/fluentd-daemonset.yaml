@@ -42,18 +42,19 @@ spec:
               value: "0"
             - name: FLUENTD_SYSTEMD_CONF
               value: "disable"
-          volumeMounts:
-          {{-range .Values.fluentd.daemonset.container.volumeMounts}}
-          - name: {{.name}}
-            mountPath: {{.mountPath}}
-            {{-if .readOnly}}
-            readOnly: {{.readOnly}}
+          volumeMounts: |
+            {{-range .Values.fluentd.daemonset.container.volumeMounts}}
+            - name: {{.name}}
+              mountPath: {{.mountPath}}
+              {{-if .readOnly}}
+              readOnly: {{.readOnly}}
+              {{-end}}
             {{-end}}
-          {{-end}}
-        terminationGracePeriodSeconds: {{.Values.fluentd.daemonset.terminationGracePeriodSeconds}}
-        volumes:
-        {{-range .Values.fluentd.daemonset.volumes}}
-        - name: {{.name}}
-          hostPath:
-            path: {{.path}}
-        {{-end}}
+          terminationGracePeriodSeconds: >
+            {{.Values.fluentd.daemonset.terminationGracePeriodSeconds}}
+          volumes: |
+            {{-range .Values.fluentd.daemonset.volumes}}
+            - name: {{.name}}
+              hostPath:
+                path: {{.path}}
+            {{-end}}

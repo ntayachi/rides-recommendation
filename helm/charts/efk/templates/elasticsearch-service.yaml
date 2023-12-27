@@ -10,8 +10,8 @@ spec:
   selector:
     app: {{.Values.elasticsearch.label}}
   clusterIP: {{.Values.elasticsearch.service.clusterIP}}
-  ports:
-  {{-range .Values.elasticsearch.service.ports}}
-    - port: {{.port}}
-      name: {{.name}}
-  {{-end}}
+  ports: |
+    {{-range .Values.elasticsearch.service.ports}}
+      - port: {{.port}}
+        name: {{.name}}
+    {{-end}}

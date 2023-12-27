@@ -19,10 +19,10 @@ spec:
       containers:
         - name: {{.Values.kibana.deployment.container.name}}
           image: {{.Values.kibana.deployment.container.image}}
-          env:
-          {{-range .Values.kibana.deployment.container.env}}
-            - name: {{.name}}
-              value: {{.value}}
-          {{-end}}
+          env: |
+            {{-range .Values.kibana.deployment.container.env}}
+              - name: {{.name}}
+                value: {{.value}}
+            {{-end}}
           ports:
-          - containerPort: {{.Values.kibana.deployment.container.port}}
+            - containerPort: {{.Values.kibana.deployment.container.port}}
