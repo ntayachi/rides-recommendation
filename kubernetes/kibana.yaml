@@ -38,3 +38,4 @@ spec:
     - port: 8080
       targetPort: 5601
       nodePort: 30000
+

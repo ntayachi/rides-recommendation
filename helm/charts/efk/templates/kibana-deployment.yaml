@@ -25,3 +25,4 @@ spec:
         {{- end }}
         ports:
         - containerPort: {{ .Values.kibana.deployment.container.port }}
+

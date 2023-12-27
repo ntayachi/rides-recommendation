@@ -1,9 +1,11 @@
+---
 releases:
-  - name: app
-    chart: charts/app
-    values:
-      - values/app-values.yaml
-  - name: efk
-    chart: charts/efk
-    values:
-      - values/efk-values.yaml
+    - name: app
+      chart: charts/app
+      values:
+          - values/app-values.yaml
+    - name: efk
+      chart: charts/efk
+      values:
+          - values/efk-values.yaml
+

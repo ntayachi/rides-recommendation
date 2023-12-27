@@ -1,20 +1,22 @@
+---
 app:
-  namespace: cycling
-  label: rides-rec
-  deployment:
-    name: rides-rec-dpl
-    replicas: 3
-  container:
-    name: rides-rec
-    image: rides-rec:latest
-    imagePullPolicy: Never
-    port: 5000
-  service:
-    name: rides-rec-svc
-    protocol: TCP
-    port: 5000
-    targetPort: 5000
-    type: LoadBalancer
-  ingress:
-    name: rides-rec-ing
-    host: rides-rec.tn
+    namespace: cycling
+    label: rides-rec
+    deployment:
+        name: rides-rec-dpl
+        replicas: 3
+    container:
+        name: rides-rec
+        image: rides-rec:latest
+        imagePullPolicy: Never
+        port: 5000
+    service:
+        name: rides-rec-svc
+        protocol: TCP
+        port: 5000
+        targetPort: 5000
+        type: LoadBalancer
+    ingress:
+        name: rides-rec-ing
+        host: rides-rec.tn
+
