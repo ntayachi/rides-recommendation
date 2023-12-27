@@ -1,47 +1,49 @@
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ .Values.elasticsearch.statefulset.name }}
-  namespace: {{ .Values.efk.namespace }}
+  name: {{.Values.elasticsearch.statefulset.name}}
+  namespace: {{.Values.efk.namespace}}
 spec:
-  serviceName: {{ .Values.elasticsearch.service.name }}
-  replicas: {{ .Values.elasticsearch.statefulset.replicas }}
+  serviceName: {{.Values.elasticsearch.service.name}}
+  replicas: {{.Values.elasticsearch.statefulset.replicas}}
   selector:
     matchLabels:
-      app: {{ .Values.elasticsearch.label }}
+      app: {{.Values.elasticsearch.label}}
   template:
     metadata:
       labels:
-        app: {{ .Values.elasticsearch.label }}
+        app: {{.Values.elasticsearch.label}}
     spec:
       containers:
-      - name: {{ .Values.elasticsearch.container.name }}
-        image: {{ .Values.elasticsearch.container.image }}
-        ports:
-        {{- range .Values.elasticsearch.container.ports }}
-        - containerPort: {{ .containerPort }}
-          name: {{ .name }}
-          protocol: {{ .protocol }}
-        {{- end }}
-        volumeMounts:
-        - name: {{ .Values.elasticsearch.container.volumeMounts.name }}
-          mountPath: {{ .Values.elasticsearch.container.volumeMounts.mountPath }}
-        env:
-          {{- range .Values.elasticsearch.container.env }}
-          {{- if eq .name "node.name" }}
-          - name: {{ .name }}
-            valueFrom:
-              fieldRef:
-                fieldPath: {{ .value }}
-          {{- else }}
-          - name: {{ .name }}
-            value: {{ .value }}
-          {{- end }}
-          {{- end }}
+        - name: {{.Values.elasticsearch.container.name}}
+          image: {{.Values.elasticsearch.container.image}}
+          ports:
+          {{-range .Values.elasticsearch.container.ports}}
+            - containerPort: {{.containerPort}}
+              name: {{.name}}
+              protocol: {{.protocol}}
+          {{-end}}
+          volumeMounts:
+          - name: {{.Values.elasticsearch.container.volumeMounts.name}}
+            mountPath: {{.Values.elasticsearch.container.volumeMounts.mountPath}}
+          env:
+            {{-range .Values.elasticsearch.container.env}}
+            {{-if eq .name "node.name"}}
+            - name: {{.name}}
+              valueFrom:
+                fieldRef:
+                  fieldPath: {{.value}}
+            {{-else}}
+            - name: {{.name}}
+              value: {{.value}}
+            {{-end}}
+            {{-end}}
       initContainers:
       - name: fix-permissions
         image: busybox
-        command: ["sh", "-c", "chown -R 1000:1000 /usr/share/elasticsearch/data"]
+        command: >
+          ["sh", "-c", "chown -R 1000:1000 /usr/share/elasticsearch/data"]
         securityContext:
           privileged: true
         volumeMounts:
@@ -80,4 +82,3 @@ spec:
       resources:
         requests:
           storage: {{ .Values.elasticsearch.volumeClaimTemplates.storage }}
-

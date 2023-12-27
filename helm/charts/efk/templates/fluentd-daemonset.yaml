@@ -1,55 +1,59 @@
+---
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: {{ .Values.fluentd.daemonset.name }}
-  namespace: {{ .Values.efk.namespace }}
+  name: {{.Values.fluentd.daemonset.name}}
+  namespace: {{.Values.efk.namespace}}
   labels:
-    app: {{ .Values.fluentd.label }}
+    app: {{.Values.fluentd.label}}
 spec:
   selector:
     matchLabels:
-      app: {{ .Values.fluentd.label }}
+      app: {{.Values.fluentd.label}}
   template:
     metadata:
       labels:
-        app: {{ .Values.fluentd.label }}
+        app: {{.Values.fluentd.label}}
     spec:
-      serviceAccount: {{ .Values.fluentd.serviceaccount.name }}
-      serviceAccountName: {{ .Values.fluentd.serviceaccount.name }}
+      serviceAccount: {{.Values.fluentd.serviceaccount.name}}
+      serviceAccountName: {{.Values.fluentd.serviceaccount.name}}
       tolerations:
-      - key: {{ .Values.fluentd.daemonset.tolerations.key }}
-        effect: {{ .Values.fluentd.daemonset.tolerations.effect }}
+        - key: {{.Values.fluentd.daemonset.tolerations.key}}
+          effect: {{.Values.fluentd.daemonset.tolerations.effect}}
       containers:
-      - name: {{ .Values.fluentd.daemonset.container.name }}
-        image: {{ .Values.fluentd.daemonset.container.image }}
-        # leave env vars inside daemonset.yaml because of this issue https://github.com/kubernetes/kubernetes/issues/82296
-        # escaping the quotes like the below enables a successful deployment of the daemonset
-        # value: "\"es-cluster-0.elasticsearch-svc.logging.svc.cluster.local\""
-        # however the env variable for host won't be interpreted properly inside the fluentd pod and causes timeout connection to elasticsearch
-        env:
-        - name: FLUENT_ELASTICSEARCH_HOST
-          value: "es-cluster-0.elasticsearch-svc.logging.svc.cluster.local"
-        - name: FLUENT_ELASTICSEARCH_PORT
-          value: "9200"
-        - name: FLUENT_EALSTICSEARCH_SCHEME
-          value: "http"
-        - name: FLUENT_UID
-          value: "0"
-        - name: FLUENTD_SYSTEMD_CONF
-          value: "disable"
-        volumeMounts:
-        {{- range .Values.fluentd.daemonset.container.volumeMounts }}
-        - name: {{ .name }}
-          mountPath: {{ .mountPath }}
-          {{- if .readOnly }}
-          readOnly: {{ .readOnly }}
-          {{- end }}
-        {{- end }}
-      terminationGracePeriodSeconds: {{ .Values.fluentd.daemonset.terminationGracePeriodSeconds }}
-      volumes:
-      {{- range .Values.fluentd.daemonset.volumes }}
-      - name: {{ .name }}
-        hostPath:
-          path: {{ .path }}
-      {{- end }}
-
+        - name: {{.Values.fluentd.daemonset.container.name}}
+          image: {{.Values.fluentd.daemonset.container.image}}
+          # leave env vars inside daemonset.yaml because of this issue
+          # https://github.com/kubernetes/kubernetes/issues/82296
+          # escaping the quotes like the below
+          # enables a successful deployment of the daemonset
+          # "\"es-cluster-0.elasticsearch-svc.logging.svc.cluster.local\""
+          # however the env variable for host
+          # won't be interpreted properly inside the fluentd pod
+          # and causes timeout connection to elasticsearch
+          env:
+            - name: FLUENT_ELASTICSEARCH_HOST
+              value: "es-cluster-0.elasticsearch-svc.logging.svc.cluster.local"
+            - name: FLUENT_ELASTICSEARCH_PORT
+              value: "9200"
+            - name: FLUENT_EALSTICSEARCH_SCHEME
+              value: "http"
+            - name: FLUENT_UID
+              value: "0"
+            - name: FLUENTD_SYSTEMD_CONF
+              value: "disable"
+          volumeMounts:
+          {{-range .Values.fluentd.daemonset.container.volumeMounts}}
+          - name: {{.name}}
+            mountPath: {{.mountPath}}
+            {{-if .readOnly}}
+            readOnly: {{.readOnly}}
+            {{-end}}
+          {{-end}}
+        terminationGracePeriodSeconds: {{.Values.fluentd.daemonset.terminationGracePeriodSeconds}}
+        volumes:
+        {{-range .Values.fluentd.daemonset.volumes}}
+        - name: {{.name}}
+          hostPath:
+            path: {{.path}}
+        {{-end}}

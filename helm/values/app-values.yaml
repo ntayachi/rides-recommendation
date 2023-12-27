@@ -19,4 +19,3 @@ app:
     ingress:
         name: rides-rec-ing
         host: rides-rec.tn
-

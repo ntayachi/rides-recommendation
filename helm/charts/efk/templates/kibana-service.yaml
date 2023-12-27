@@ -14,4 +14,3 @@ spec:
         - port: {{.Values.kibana.service.port: null}: null}
           targetPort: {{.Values.kibana.service.targetPort: null}: null}
           nodePort: {{.Values.kibana.service.nodePort: null}: null}
-

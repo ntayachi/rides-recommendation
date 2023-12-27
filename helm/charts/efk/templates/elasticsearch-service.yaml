@@ -1,17 +1,17 @@
+---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.elasticsearch.service.name }}
-  namespace: {{ .Values.efk.namespace }}
+  name: {{.Values.elasticsearch.service.name}}
+  namespace: {{.Values.efk.namespace}}
   labels:
-    app: {{ .Values.elasticsearch.label }}
+    app: {{.Values.elasticsearch.label}}
 spec:
   selector:
-    app: {{ .Values.elasticsearch.label }}
-  clusterIP: {{ .Values.elasticsearch.service.clusterIP }}
+    app: {{.Values.elasticsearch.label}}
+  clusterIP: {{.Values.elasticsearch.service.clusterIP}}
   ports:
-  {{- range .Values.elasticsearch.service.ports }}
-    - port: {{ .port }}
-      name: {{ .name }}
-  {{- end }}
-
+  {{-range .Values.elasticsearch.service.ports}}
+    - port: {{.port}}
+      name: {{.name}}
+  {{-end}}

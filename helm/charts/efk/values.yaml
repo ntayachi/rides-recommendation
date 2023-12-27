@@ -1,3 +1,4 @@
+---
 efk:
   namespace: logging
 # --------- Elasticsearch values ---------
@@ -102,4 +103,3 @@ kibana:
           value: >
             http://es-cluster-0.elasticsearch-svc.logging.svc.cluster.local:9200
       port: 5601
-

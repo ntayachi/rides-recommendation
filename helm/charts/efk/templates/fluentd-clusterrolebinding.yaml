@@ -11,4 +11,3 @@ subjects:
     - kind: ServiceAccount
       name: {{.Values.fluentd.serviceaccount.name: null}: null}
       namespace: {{.Values.efk.namespace: null}: null}
-

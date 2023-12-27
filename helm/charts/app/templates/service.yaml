@@ -1,16 +1,16 @@
+---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{.Values.app.service.name}}
-  namespace: {{.Values.app.namespace}}
-  labels:
-    app: {{.Values.app.label}}
+    name: {{.Values.app.service.name: null}: null}
+    namespace: {{.Values.app.namespace: null}: null}
+    labels:
+        app: {{.Values.app.label: null}: null}
 spec:
-  selector:
-    app: {{.Values.app.label}}
-  ports:
-    - protocol: {{.Values.app.service.protocol}}
-      port: {{.Values.app.service.port}}
-      targetPort: {{.Values.app.service.targetPort}}
-  type: {{.Values.app.service.type}}
-
+    selector:
+        app: {{.Values.app.label: null}: null}
+    ports:
+        - protocol: {{.Values.app.service.protocol: null}: null}
+          port: {{.Values.app.service.port: null}: null}
+          targetPort: {{.Values.app.service.targetPort: null}: null}
+    type: {{.Values.app.service.type: null}: null}
