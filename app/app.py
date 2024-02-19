@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 import requests
-import config
 import json
+import os
 
 app = Flask(__name__)
 
@@ -21,8 +21,10 @@ def destination(date):
 
 
 def calculateDestination(sunday_date):
+    weather_api_url = os.getenv("WEATHER_API_URL")
+    weather_api_key = os.getenv("WEATHER_API_KEY")
     api_url = (
-        f"{config.API_BASE_URL}/forecast.json?key={config.API_KEY}&q=TUN&days=3&hour=6"
+        f"{weather_api_url}/forecast.json?key={weather_api_key}&q=TUN&days=3&hour=6"
     )
     api_response = requests.get(api_url).content
     weather = json.loads(api_response)

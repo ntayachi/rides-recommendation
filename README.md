@@ -17,13 +17,13 @@ You should enter the following date format in the 'Sunday date' input field: YYY
 ### Create virtual environment
 
 ```
-python3 -m venv venv
+python3 -m venv .venv
 ```
 
 ### Activate the virtual environment
 
 ```
-source venv/bin/activate
+source .venv/bin/activate
 ```
 
 ### Install dependencies
@@ -32,19 +32,17 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### Create config.py file
+### Set up the environment variables
 
 ```
-vi config.py
-
-API_BASE_URL = 'http://api.weatherapi.com/v1'
-API_KEY = '********************'
+export WEATHER_API_URL="http://api.weatherapi.com/v1"
+export WEATHER_API_KEY=""********************"
 ```
 
 ### Start the app on web development server
 
 ```
-python app.py
+python -m app.app
 ```
 
 ## Steps to deploy in Docker
@@ -56,7 +54,7 @@ python app.py
 ### Build the Docker image
 
 ```
-docker build -f docker/Dockerfile -t rides-rec:latest .
+docker build -f docker/Dockerfile -t rides-rec .
 ```
 
 Make sure that the image was built
@@ -68,7 +66,12 @@ docker image ls
 ### Run the app in a Docker container
 
 ```
-docker run -d -p 5000:5000 --name rides-rec-v1 rides-rec:latest
+docker run -p 5000:5000 \
+    -e WEATHER_API_URL=$(WEATHER_API_URL) \
+    -e WEATHER_API_KEY=$(WEATHER_API_KEY) \
+    --cpu-shares=2 --cpus=1 \
+    --memory=100m --memory-reservation=50m \
+    --name rides-rec-v1 rides-rec:latest
 ```
 
 Go to http://localhost:5000 to access the application.
