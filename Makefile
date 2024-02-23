@@ -1,12 +1,13 @@
 .PHONY: venv debug-venv run docker-build docker-run docker-clean clean
+.DEFAULT_GOAL := help
 .ONESHELL:
 SHELL := /bin/bash
 
-WORKDIR?=.
-VENVDIR?=$(WORKDIR)/.venv
+APP_ROOT?=.
+VENVDIR?=$(APP_ROOT)/.venv
 VENV=$(VENVDIR)/bin
 TOUCHFILE=$(VENVDIR)/created-by-Makefile
-REQUIREMENTS_TXT=$(WORKDIR)/app/requirements.txt
+REQUIREMENTS_TXT=$(APP_ROOT)/app/requirements.txt
 IMAGE?=rides-rec
 
 venv: $(TOUCHFILE) ## Create a virtual environment
@@ -47,7 +48,7 @@ docker-clean: ## Remove old docker containers
 
 clean: ## Clean the virtual environment directory and *.pyc files
 	rm -rf $(VENVDIR)
-	find $(WORKDIR) -iname "*.pyc" -delete
+	find $(APP_ROOT) -iname "*.pyc" -delete
 
 help: ## Show this help message
 	@egrep -h '\s##\s' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m  %-30s\033[0m %s\n", $$1, $$2}'
