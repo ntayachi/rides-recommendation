@@ -35,13 +35,13 @@ docker-build: ## Build the docker image
 
 docker-run: docker-build ## Run inside a docker container
 	@echo "Run inside docker contianer ..."
-	docker run -p 5000:5000 \
-	--label image=$(IMAGE) \
-	--env WEATHER_API_URL=$(WEATHER_API_URL) \
-	--env WEATHER_API_KEY=$(WEATHER_API_KEY) \
-	--cpu-shares=2 --cpus=1 \
-	--memory=100m --memory-reservation=50m \
-	$(IMAGE)
+	docker run --publish 5000:5000 \
+		--label image=$(IMAGE) \
+		--env WEATHER_API_URL=$(WEATHER_API_URL) \
+		--env WEATHER_API_KEY=$(WEATHER_API_KEY) \
+		--cpu-shares=2 --cpus=1 \
+		--memory=100m --memory-reservation=50m \
+		$(IMAGE)
 
 docker-clean: ## Remove old docker containers
 	docker ps --all --quiet --filter label=image=$(IMAGE) | xargs docker rm
