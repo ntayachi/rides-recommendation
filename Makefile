@@ -1,4 +1,4 @@
-.PHONY: venv debug-venv run build clean
+.PHONY: venv debug-venv run docker-build docker-run docker-clean clean
 .ONESHELL:
 SHELL := /bin/bash
 
@@ -16,30 +16,34 @@ $(TOUCHFILE): $(REQUIREMENTS_TXT)
 	python3 -m venv $(VENVDIR)
 	. $(VENV)/activate
 	$(VENV)/pip install -r $(REQUIREMENTS_TXT)
-	touch $(VENVDIR)/created-by-Makefile
+	touch $(TOUCHFILE)
 
-debug-venv: venv ## Print the virtual environment directory, python and pip versions
+venv-debug: venv ## Print the virtual environment directory, python and pip versions
 	$(info SHELL="$(SHELL)")
 	@echo VENVDIR: $(VENVDIR)
-	@echo PYTHON VERSION: `python --version`
-	@echo PIP VERSION: `pip --version`
+	@echo PYTHON VERSION: `$(VENV)/python --version`
+	@echo PIP VERSION: `$(VENV)/pip --version`
 
-debug: venv ## Run the Flask app in debug mode
-	@echo "Run Flask app in debug mode ..."
-	python -m app.app
+run: venv ## Run the Flask app
+	@echo "Run the Flask app ..."
+	$(VENV)/python -m app.app
 
-build: ## Build the docker image
+docker-build: ## Build the docker image
 	@echo "Build docker image: $(IMAGE) ..."
 	docker build -f docker/Dockerfile -t $(IMAGE) . --progress=plain
 
-run: build ## Run inside a docker container
+docker-run: docker-build ## Run inside a docker container
 	@echo "Run inside docker contianer ..."
 	docker run -p 5000:5000 \
-	-e WEATHER_API_URL=$(WEATHER_API_URL) \
-	-e WEATHER_API_KEY=$(WEATHER_API_KEY) \
+	--label image=$(IMAGE) \
+	--env WEATHER_API_URL=$(WEATHER_API_URL) \
+	--env WEATHER_API_KEY=$(WEATHER_API_KEY) \
 	--cpu-shares=2 --cpus=1 \
 	--memory=100m --memory-reservation=50m \
 	$(IMAGE)
+
+docker-clean: ## Remove old docker containers
+	docker ps --all --quiet --filter label=image=$(IMAGE) | xargs docker rm
 
 clean: ## Clean the virtual environment directory and *.pyc files
 	rm -rf $(VENVDIR)

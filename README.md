@@ -36,7 +36,7 @@ pip install -r requirements.txt
 
 ```
 export WEATHER_API_URL="http://api.weatherapi.com/v1"
-export WEATHER_API_KEY=""********************"
+export WEATHER_API_KEY="********************"
 ```
 
 ### Start the app on web development server
