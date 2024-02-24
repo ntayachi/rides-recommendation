@@ -25,6 +25,8 @@ venv-debug: venv ## Print the virtual environment directory, python and pip vers
 	@echo PYTHON VERSION: `$(VENV)/python --version`
 	@echo PIP VERSION: `$(VENV)/pip --version`
 
+test: venv ## Run the tests
+	PYTHONPATH=$(APP_ROOT) pytest tests/
 run: venv ## Run the Flask app
 	@echo "Run the Flask app ..."
 	$(VENV)/python -m app.app

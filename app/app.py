@@ -6,6 +6,11 @@ import os
 app = Flask(__name__)
 
 
+@app.route("/health")
+def health_check():
+    return "OK", 200
+
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
@@ -16,11 +21,11 @@ def index():
 
 @app.route("/destination/<date>")
 def destination(date):
-    dest = calculateDestination(date)
+    dest = calculate_destination(date)
     return render_template("destination.html", destination=dest)
 
 
-def calculateDestination(sunday_date):
+def calculate_destination(sunday_date):
     weather_api_url = os.getenv("WEATHER_API_URL")
     weather_api_key = os.getenv("WEATHER_API_KEY")
     api_url = (
