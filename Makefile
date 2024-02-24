@@ -1,4 +1,4 @@
-.PHONY: venv debug-venv run docker-build docker-run docker-clean clean
+.PHONY: venv debug-venv test run docker-build docker-run docker-clean clean
 .DEFAULT_GOAL := help
 .ONESHELL:
 SHELL := /bin/bash
@@ -27,6 +27,7 @@ venv-debug: venv ## Print the virtual environment directory, python and pip vers
 
 test: venv ## Run the tests
 	PYTHONPATH=$(APP_ROOT) pytest tests/
+
 run: venv ## Run the Flask app
 	@echo "Run the Flask app ..."
 	$(VENV)/python -m app.app
